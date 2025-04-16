@@ -1,0 +1,40 @@
+{
+    "name": "tscnt-detector",
+    "version": "1.0.0",
+    "description": "Universal ISO container type normalization and detection helper",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "test": "vitest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jehadja/tscnt-detector"
+    },
+    "keywords": [
+        "container",
+        "ISO 6346",
+        "reefer",
+        "flat rack",
+        "normalization",
+        "shipping",
+        "container-code",
+        "cbm",
+        "serial-check",
+        "tos",
+        "high cube",
+        "CLI",
+        "validator"
+    ],
+    "author": "Jehad Jaghoub",
+    "license": "MIT",
+    "bin": {
+        "tscnt": "./bin/tscnt"
+    },
+    "type": "module",
+    "devDependencies": {
+        "typescript": "^5.8.3",
+        "vitest": "^3.1.1"
+    }
+}

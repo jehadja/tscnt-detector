@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+import { ContainerTypeHelper } from '../dist/container-helper.js';
+
+const args = process.argv.slice(2);
+
+// Initialize variables
+let raw = '';
+let serialInput = '';
+let size = '20';
+
+// Parse named args
+for (const arg of args) {
+    if (arg.startsWith('--size=')) {
+        size = arg.split('=')[1];
+    } else if (arg.startsWith('--containerNumber=') || arg.startsWith('--serial=')) {
+        serialInput = arg.split('=')[1];
+    } else if (arg.startsWith('--containerType=') || arg.startsWith('--type=')) {
+        raw = arg.split('=')[1];
+    } else if (/^[A-Z]{4}\d{7}$/i.test(arg)) {
+        serialInput = arg;
+    } else {
+        raw = arg;
+    }
+}
+
+if (!raw && !serialInput) {
+    console.error('❌ Please provide a container type (--containerType=RC) or number (--containerNumber=TCLU7024574)');
+    process.exit(1);
+}
+
+const helper = new ContainerTypeHelper(raw, serialInput);
+const type = helper.convertISO();
+const fullISO = helper.getFullISO(size);
+const isHighCube = helper.isHC();
+const dimensions = helper.getDimensions(size);
+const cbm = helper.getCBM(size);
+const serial = helper.getParsedCode();
+
+// Output
+console.log(`🔎 Type Detected: ${type ?? 'Unknown'}`);
+console.log(`🔢 Full ISO: ${fullISO}`);
+console.log(`📐 Dimensions: ${dimensions ? `${dimensions.length}×${dimensions.width}×${dimensions.height} mm` : 'Unknown'}`);
+console.log(`📦 CBM: ${cbm ?? 'Unknown'}`);
+console.log(`🏷️ Is HC: ${isHighCube}`);
+
+// Serial details
+if (serial) {
+    console.log('\n🔍 Serial Detected:');
+    console.log(`  📦 Owner Code:        ${serial.ownerCode}`);
+    console.log(`  🔠 Category:          ${serial.categoryIdentifier}`);
+    console.log(`  🔢 Serial Number:     ${serial.serialNumber}`);
+    console.log(`  ✅ Check Digit:       ${serial.checkDigit}`);
+    console.log(`  🔍 Valid Check Digit: ${serial.isValid ? '✔️ Yes' : '❌ No'}`);
+}
